@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package protoid;
+
+message SingleString {
+  string the_string = 1;
+}
+
+message TwoStrings {
+  string string_1 = 1;
+  string string_2 = 2;
+}
+
+message SingleInt32 {
+  int32 the_int32 = 1;
+}
+
+message SingleBool {
+  bool the_bool = 1;
+}
+
+message SingleFixed32 {
+  fixed32 the_fixed32 = 1;
+}
+
+message SingleFixed64 {
+  fixed64 the_fixed64 = 1;
+}
+
+message RepeatedString {
+  repeated string my_string = 1;
+}
+
+message RepeatedInt32 {
+  repeated int32 my_int32s = 1;
+}
+
+message SingleEnum {
+  TestEnum the_enum = 1;
+}
+
+message RepeatedEnum {
+  TestEnum the_enums = 1;
+}
+
+enum TestEnum {
+  VAL_0 = 0;
+  VAL_1 = 1;
+}
+
+message SingleEmbedded {
+  SingleString my_single_string = 1;
+}
+
+message RepeatedEmbedded {
+  repeated SingleString my_single_strings = 1;
+}
+
+message SingleBytes {
+  bytes the_bytes = 1;
+}
