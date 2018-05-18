@@ -8,11 +8,15 @@ import (
 )
 
 var (
+	// ErrUnexpectedEndOfInput indicates that the input data is shorter than expected.
 	ErrUnexpectedEndOfInput = errors.New("unexpected end of input")
-	ErrGroupsNotImplemented = errors.New("groups not implemented")
-	ErrNumberTooLarge       = errors.New("number too large for 64 bit value")
+	// ErrNotImplemented indicates that a message contained somethings that protoid cannot currently decode.
+	ErrNotImplemented = errors.New("groups not implemented")
+	// ErrNumberTooLarge inducates that a number found in a protocol buffers message cannot be represented as a 64 bit value.
+	ErrNumberTooLarge = errors.New("number too large for 64 bit value")
 )
 
+// Decode decodes an arbitrary protocol buffers message into a map of field number to field value. It makes a best-effort attempt to use the most appropriate type for the values.  Embedded structs, strings, integers and more are often decoded correctly.  However due to the nature of protocol buffers, it is not always possible to do this perfectly.
 func Decode(input []byte) (map[int]interface{}, error) {
 	m := make(map[int]interface{})
 	for len(input) > 0 {
@@ -86,9 +90,9 @@ func Decode(input []byte) (map[int]interface{}, error) {
 			}
 			input = input[l:]
 		case 3: // Start group (groups are deprecated)
-			return nil, ErrGroupsNotImplemented
+			return nil, ErrNotImplemented
 		case 4: // End group (groups are deprecated)
-			return nil, ErrGroupsNotImplemented
+			return nil, ErrNotImplemented
 		case 5: // 32-bit value (fixed32, sfixed32, float)
 			if len(input) < 4 {
 				return nil, ErrUnexpectedEndOfInput
