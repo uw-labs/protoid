@@ -101,7 +101,7 @@ func Decode(input []byte) (map[int]interface{}, error) {
 			input = input[4:]
 			m[k] = val
 		default:
-			return nil, fmt.Errorf("unsupported wire type : %v\n", wiretype)
+			return nil, fmt.Errorf("unsupported wire type : %v", wiretype)
 		}
 	}
 	return m, nil
