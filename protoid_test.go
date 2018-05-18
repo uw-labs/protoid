@@ -227,7 +227,7 @@ func TestRepeatedEmbedded(t *testing.T) {
 	assert := assert.New(t)
 
 	ss := &RepeatedEmbedded{MySingleStrings: []*SingleString{
-		&SingleString{TheString: "123"}, &SingleString{TheString: "456"},
+		{TheString: "123"}, {TheString: "456"},
 	}}
 	ser, err := proto.Marshal(ss)
 	if err != nil {
