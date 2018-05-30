@@ -84,6 +84,15 @@ func Decode(input []byte) (map[int]interface{}, error) {
 
 	va := &genericMapValueApplier{m}
 
+	if err := decode(input, va); err != nil {
+		return nil, err
+	}
+
+	return m, nil
+}
+
+func decode(input []byte, va valueApplier) error {
+
 	r := &reader{buf: input}
 
 	for !r.done() {
@@ -94,35 +103,35 @@ func Decode(input []byte) (map[int]interface{}, error) {
 		case 0: // varint value (int32, int64, uint32, uint64, sint32, sint64, bool, enum)
 			v := r.decodeVarint()
 			if err := va.mapType0(k, v); err != nil {
-				return nil, err
+				return err
 			}
 		case 1: // 64 bit value (fixed64, sfixed64, double)
 			v := r.readLeUint64()
 			if err := va.mapType1(k, v); err != nil {
-				return nil, err
+				return err
 			}
 		case 2: // length-delimited value (string, bytes, embedded messages, packed repeated fields)
 			v := r.readLenDelimValue()
 			if err := va.mapType2(k, v); err != nil {
-				return nil, err
+				return err
 			}
 		case 3: // Start group (groups are deprecated)
-			return nil, ErrNotImplemented
+			return ErrNotImplemented
 		case 4: // End group (groups are deprecated)
-			return nil, ErrNotImplemented
+			return ErrNotImplemented
 		case 5: // 32-bit value (fixed32, sfixed32, float)
 			v := r.readLeUint32()
 			if err := va.mapType5(k, v); err != nil {
-				return nil, err
+				return err
 			}
 		default:
-			return nil, fmt.Errorf("unsupported wire type : %v", wiretype)
+			return fmt.Errorf("unsupported wire type : %v", wiretype)
 		}
 	}
 	if r.err != nil {
-		return nil, r.err
+		return r.err
 	}
-	return m, nil
+	return nil
 }
 
 type reader struct {
